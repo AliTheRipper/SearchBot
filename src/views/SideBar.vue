@@ -7,7 +7,7 @@
       </router-link>
     </div>
     <nav class="nav">
-      <router-link to="/recherche" class="nav-item">Recherche</router-link>
+      <router-link to="/" class="nav-item">Recherche</router-link>
       <router-link to="/historique" class="nav-item">Historique</router-link>
       <router-link to="/tendances" class="nav-item">Tendances</router-link>
       <router-link to="/favoris" class="nav-item">Favoris</router-link>
@@ -24,7 +24,7 @@ export default {
 
 <style scoped>
 .sidebar {
-  background-color: #262626;
+  background-color: #383838;
   height: 100vh;
   display: flex;
   flex-direction: column;

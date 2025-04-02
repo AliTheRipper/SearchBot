@@ -38,7 +38,7 @@ body {
   grid-template-columns: 200px 1fr; /* Sidebar fixed width, main area takes remaining space */
   grid-template-rows: 1fr auto;    /* Main area grows, footer is at the bottom */
   min-height: 100vh;
-  background-color: #1a1a1a;       /* Dark background */
+  background-color: #262626;       /* Dark background */
   color: #fff;                     /* White text */
 }
 

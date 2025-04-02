@@ -1,10 +1,12 @@
 <template>
   <div class="home-container">
     <h1 class="title">Que voulez-vous voir ?</h1>
-    <SearchBar 
-      placeholder="Je veux voir un film d'horreur de plus de deux heures."
-      @search="handleSearch"
-    />
+    <div class="div-search-bar">
+      <SearchBar 
+        placeholder="Je veux voir un film d'horreur de plus de deux heures."
+        @search="handleSearch"
+      />
+    </div>
   </div>
 </template>
 
@@ -29,7 +31,21 @@ export default {
 <style scoped>
 .title {
   font-size: 2rem;
-  margin-bottom: 1rem;
   text-align: center;
+  margin-top: 15rem;
+  margin-bottom: 10rem;
+}
+
+.home-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.div-search-bar {
+  margin-bottom: auto;
+  margin-right: auto;
+  margin-left: auto;
+  min-width: 80%;
 }
 </style>
