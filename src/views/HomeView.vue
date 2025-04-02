@@ -30,10 +30,11 @@ export default {
 
 <style scoped>
 .title {
-  font-size: 2rem;
+  font-size: 3rem;
   text-align: center;
   margin-top: 15rem;
   margin-bottom: 10rem;
+  font-weight: lighter;
 }
 
 .home-container {

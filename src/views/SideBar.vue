@@ -64,6 +64,6 @@ export default {
 }
 
 .nav-item:hover {
-  background-color: #404040;
+  background-color: #4e4e4e;
 }
 </style>

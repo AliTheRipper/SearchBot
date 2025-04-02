@@ -29,6 +29,7 @@ export default {
 <style>
 body {
   margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>
 
@@ -42,14 +43,10 @@ body {
   color: #fff;                     /* White text */
 }
 
-.main-content {
-  padding: 20px;
-}
-
 .footer {
   grid-column: 1 / 3;
-  padding: 10px 20px;
-  background-color: #2f2f2f;
+  padding: 25px 20px;
+  background-color: #205372;
   text-align: center;
 }
 </style>
