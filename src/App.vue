@@ -26,6 +26,12 @@ export default {
 }
 </script>
 
+<style>
+body {
+  margin: 0;
+}
+</style>
+
 <style scoped>
 .app-container {
   display: grid;
