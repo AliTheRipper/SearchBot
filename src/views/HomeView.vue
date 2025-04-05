@@ -7,11 +7,18 @@
         @search="handleSearch"
       />
     </div>
+    <div v-if="displayResults" class="resultgrid">
+      <Result/>
+      <Result/>
+      <Result/>
+      <Result/>
+    </div>
   </div>
 </template>
 
 <script setup>
 import SearchBar from '@/views/SearchBar.vue'
+import Result from '@/views/Result.vue'
 import { ref } from 'vue'
 
 const displayResults = ref(false)
