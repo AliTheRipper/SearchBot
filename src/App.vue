@@ -1,27 +1,48 @@
 <template>
-  <div id="app" class="app-container">
-    <Sidebar />
+  <div class="app-container">
+    <!-- Hamburger button (visible only when sidebar is hidden) -->
+    <button
+      v-if="!sidebarVisible"
+      class="hamburger-open"
+      @click="toggleSidebar"
+    >
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </button>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <!-- The router-view displays different pages if you use vue-router -->
-      <router-view />
-      <!-- If you’re not using router, you can just place your HomeView (or other content) directly here -->
+    <!-- Sidebar with slide transition -->
+    <transition name="slide" :duration="{ enter: 300, leave: 300 }">
+      <SideBar v-if="sidebarVisible" @closeSidebar="toggleSidebar" />
+    </transition>
+
+    <!-- Content wrapper with flex to push footer to bottom -->
+    <div class="content-wrapper">
+      <div class="main-content">
+        <router-view />
+      </div>
+      <footer class="footer">
+        Pied de page
+      </footer>
     </div>
-
-    <footer class="footer">
-      Pied de page
-    </footer>
   </div>
 </template>
 
 <script>
-import Sidebar from './views/SideBar.vue'
+import SideBar from './views/SideBar.vue'
 
 export default {
   name: 'App',
-  components: {
-    Sidebar
+  components: { SideBar },
+  data() {
+    return {
+      sidebarVisible: false
+    }
+  },
+  methods: {
+    toggleSidebar() {
+      this.sidebarVisible = !this.sidebarVisible
+    }
   }
 }
 </script>
@@ -34,19 +55,70 @@ body {
 </style>
 
 <style scoped>
+/* The overall container uses flex in column direction and fills the viewport */
 .app-container {
-  display: grid;
-  grid-template-columns: 200px 1fr; /* Sidebar fixed width, main area takes remaining space */
-  grid-template-rows: 1fr auto;    /* Main area grows, footer is at the bottom */
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background-color: #262626;       /* Dark background */
-  color: #fff;                     /* White text */
+  background-color: #1a1a1a;
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* The content-wrapper takes all available space, ensuring the footer is pushed down */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The main content grows to fill the available space */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+
+
+/* Hamburger button styles */
+.hamburger-open {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  z-index: 110;
+}
+
+.hamburger-open .line {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+}
+
+/* Slide transition for sidebar */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+.slide-enter-to,
+.slide-leave-from {
+  transform: translateX(0);
 }
 
 .footer {
-  grid-column: 1 / 3;
-  padding: 25px 20px;
+  grid-column: 1 / -1;
+  padding: 10px 20px;
   background-color: #205372;
   text-align: center;
-}
+	}
 </style>

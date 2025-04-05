@@ -1,13 +1,20 @@
 <template>
-  <aside class="sidebar">
-    <!-- Logo cliquable pour revenir à l'accueil -->
-    <div class="logo">
+  <aside class="SideBar">
+    <div class="sidebar-header">
+      <!-- Logo: clickable to go home -->
       <router-link to="/" class="logo-link">
-        <img src="@/assets/logo.png" alt="Logo" /><!-- image-->
+        <img src="@/assets/logo.png" alt="Logo" />
       </router-link>
+      -->
+      <!-- Bouton flèche pour fermer la sidebar -->
+      <button class="close-button" @click="$emit('closeSidebar')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="12 4 6 10 12 16" />
+        </svg>
+      </button>
     </div>
     <nav class="nav">
-      <router-link to="/" class="nav-item">Recherche</router-link>
+      <router-link to="/recherche" class="nav-item">Recherche</router-link>
       <router-link to="/historique" class="nav-item">Historique</router-link>
       <router-link to="/tendances" class="nav-item">Tendances</router-link>
       <router-link to="/favoris" class="nav-item">Favoris</router-link>
@@ -23,32 +30,49 @@ export default {
 </script>
 
 <style scoped>
-.sidebar {
-  background-color: #383838;
-  height: 100vh;
+.SideBar {
+  position: fixed; /* Fixed to prevent layout shifts */
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  background-color: #262626;
+  z-index: 100;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  grid-row: 1 / span 2; /* Span both rows (content and footer) */
 }
 
-.logo {
-  margin-bottom: 2rem;
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo-link {
   text-decoration: none;
   color: inherit;
-  display: flex;
-  align-items: center;
 }
 
 .logo-link img {
-  max-width: 150px; /* Ajustez la taille de votre logo */
-  width: 100%;
+  max-width: 100px;
   height: auto;
 }
 
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
