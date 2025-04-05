@@ -12,11 +12,25 @@
 
 <script setup>
 import SearchBar from '@/views/SearchBar.vue'
+import { ref } from 'vue'
+
+const displayResults = ref(false)
 
 // Methods
 const handleSearch = function(query) {
 	console.log('User searched for:', query)
-	// Implémentez votre logique de recherche ici
+
+  const formData = new FormData
+  formData.append(query)
+
+  // Placeholder pour plus tard
+  axios.post('/recherche', formData)
+  .then((response) => {
+    console.log(response.data)
+  })
+  .catch((e) => {
+    console.log(e)
+  })
 }
 
 </script>

@@ -15,8 +15,11 @@
 <script setup>
 import { ref } from 'vue';
 
+
 // Data
 const searchQuery = ref('');
+
+const emit = defineEmits(["search"])
 
 // Props
 const props = defineProps({
@@ -29,7 +32,7 @@ const props = defineProps({
 // Methods
 const onSearch = function() {
 	// Émet l'événement "search" avec le contenu du champ de recherche
-	this.$emit('search', searchQuery.value)
+	emit("search", searchQuery.value)
 }
 
 </script>
