@@ -28,23 +28,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import SideBar from './views/SideBar.vue'
+import { ref } from 'vue';
 
-export default {
-  name: 'App',
-  components: { SideBar },
-  data() {
-    return {
-      sidebarVisible: false
-    }
-  },
-  methods: {
-    toggleSidebar() {
-      this.sidebarVisible = !this.sidebarVisible
-    }
-  }
+// Data
+const sidebarVisible = ref(false);
+
+// Methods
+const toggleSidebar = function() {
+	sidebarVisible.value = !sidebarVisible.value
 }
+
 </script>
 
 <style>

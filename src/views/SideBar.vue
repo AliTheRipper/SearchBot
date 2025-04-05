@@ -5,7 +5,6 @@
       <router-link to="/" class="logo-link">
         <img src="@/assets/logo.png" alt="Logo" />
       </router-link>
-      -->
       <!-- Bouton flèche pour fermer la sidebar -->
       <button class="close-button" @click="$emit('closeSidebar')">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -23,10 +22,7 @@
   </aside>
 </template>
 
-<script>
-export default {
-  name: 'SideBar'
-}
+<script setup>
 </script>
 
 <style scoped>

@@ -10,22 +10,15 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import SearchBar from '@/views/SearchBar.vue'
-//import SearchBar2 from '@/views/SearchBar2.vue'
 
-export default {
-  name: 'HomeView',
-  components: {
-    SearchBar
-  },
-  methods: {
-    handleSearch(query) {
-      console.log('User searched for:', query)
-      // Implémentez votre logique de recherche ici
-    }
-  }
+// Methods
+const handleSearch = function(query) {
+	console.log('User searched for:', query)
+	// Implémentez votre logique de recherche ici
 }
+
 </script>
 
 <style scoped>

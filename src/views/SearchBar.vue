@@ -12,27 +12,26 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SearchBar',
-  props: {
-    placeholder: {
-      type: String,
-      default: 'Tapez votre recherche...'
-    }
-  },
-  data() {
-    return {
-      searchQuery: ''
-    }
-  },
-  methods: {
-    onSearch() {
-      // Émet l'événement "search" avec le contenu du champ de recherche
-      this.$emit('search', this.searchQuery)
-    }
-  }
+<script setup>
+import { ref } from 'vue';
+
+// Data
+const searchQuery = ref('');
+
+// Props
+const props = defineProps({
+	placeholder: {
+		type: String,
+		default: 'Tapez votre recherche...'
+	}
+});
+
+// Methods
+const onSearch = function() {
+	// Émet l'événement "search" avec le contenu du champ de recherche
+	this.$emit('search', searchQuery.value)
 }
+
 </script>
 
 <style scoped>
