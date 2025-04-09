@@ -7,11 +7,19 @@
         @search="handleSearch"
       />
     </div>
-    <div v-if="displayResults" class="resultgrid">
-      <Result/>
-      <Result/>
-      <Result/>
-      <Result/>
+    <div v-if="displayResults" class="resultgrid"> <!-- basculement de l'affichage -->
+      <div v-if="!loading"> <!-- cache les éléments si les résultats sont en train de charger -->
+        <div v-for="item in data"> <!-- affiche les éléments -->
+          <Result 
+            :id="item.id" 
+            :movie-title="item.movieTitle" 
+            :director="item.director" 
+            :year="item.year" 
+            :summary="item.summary" 
+            :poster="item.poster"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -21,10 +29,15 @@ import SearchBar from '@/views/SearchBar.vue'
 import Result from '@/views/Result.vue'
 import { ref } from 'vue'
 
-const displayResults = ref(false)
+const displayResults = ref(false) // fait passer de l'affichage recherche à l'affichage gallerie ; initialisé à false et ne repasse jamais en false
+const data = ref([]) // la liste des objets réceptionnés depuis le backend
+const loading = ref(false) //à faire passer en true quand on attend la réponse du backend
 
 // Methods
 const handleSearch = function(query) {
+  displayResults = true
+  loading = true
+
 	console.log('User searched for:', query)
 
   const formData = new FormData
@@ -34,9 +47,15 @@ const handleSearch = function(query) {
   axios.post('/recherche', formData)
   .then((response) => {
     console.log(response.data)
+    
+    data = response.data
+    loading = false
   })
   .catch((e) => {
     console.log(e)
+
+    data = []
+    loading = false
   })
 }
 
