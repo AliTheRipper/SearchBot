@@ -9,7 +9,11 @@
     </div>
     <div v-if="displayResults" class="resultgrid"> <!-- basculement de l'affichage -->
       <div v-if="!loading"> <!-- cache les éléments si les résultats sont en train de charger -->
-        <div v-for="item in data"> <!-- affiche les éléments -->
+        <div v-if="data == []">
+          <!-- message aucun résultat -->
+        </div>
+        <!-- (note : je ne suis pas sûre que v-else apprécie être au même endroit que v-for, à tester)  -->
+        <div v-else v-for="item in data"> <!-- affiche les éléments -->
           <Result 
             :id="item.id" 
             :movie-title="item.movieTitle" 

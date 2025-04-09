@@ -1,9 +1,11 @@
 <template>
-    <div class="result-container" @click="openPopup">
+    <div class="result-container" @click="openModal">
         <img :src="poster">
-        <h1>{{ titreFilm }}</h1>
-        <h2>{{ director }} - {{ year }}</h2>
-        <p>{{ summary }}</p>
+        <div class="info">
+            <h1>{{ movieTitle }}</h1>
+            <h2>{{ director }} - {{ year }}</h2>
+            <p>{{ summary }}</p>
+        </div>
     </div>
 </template>
 
@@ -12,11 +14,19 @@ import { defineProps } from 'vue';
 
 defineProps(['id','movieTitle', 'director', 'year', 'poster', 'summary'])
 
-const openPopup = function(id) {
+const openModal = function(id) {
     // Ouvrir le popup
 }
 </script>
 
 <style>
+.result-container {
+    display: flex;
+    flex-direction: column;
+}
 
+.info {
+    display: flex;
+    flex-direction: row;
+}
 </style>
