@@ -26,10 +26,17 @@
         <input type="password" id="confirmPassword" v-model="confirmPassword" required>
         <p class="error" v-if="password !== confirmPassword">Les mots de passe ne correspondent pas</p>
       </div>
-
-      <button type="submit">S'inscrire</button>
+      
+      <div v-if="loading" class="spinner"></div>
+      <button type="submit" :disabled="loading">
+        <span v-if="!loading">S'inscrire</span>
+        <span v-else>Chargement...</span>
+      </button>
       <p class="error" v-if="errorMessage">{{ errorMessage }}</p>
       <p class="success" v-if="successMessage">{{ successMessage }}</p>
+      
+
+
     </form>
   </div>
 </template>
@@ -47,16 +54,23 @@ const errorMessage = ref('')
 const successMessage = ref('')
 const validationErrors = ref({})
 const router = useRouter()
+const loading = ref(false)
+
 
 const register = async () => {
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = "Les mots de passe ne correspondent pas"
-    return
-  }
-
+  loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
   validationErrors.value = {}
+
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = "Les mots de passe ne correspondent pas"
+    loading.value = false
+
+    return
+  }
+
+
 
   try {
     const response = await axios.post('http://127.0.0.1:8000/api/register', {
@@ -67,7 +81,7 @@ const register = async () => {
 
     if (response.data.success) {
       successMessage.value = "Inscription réussie !"
-      router.push('/') // redirection après succès
+      router.push('/home') // redirection après succès
     }
   } catch (error) {
     if (error.response?.status === 422) {
@@ -76,6 +90,9 @@ const register = async () => {
       errorMessage.value = error.response?.data?.message || "Erreur lors de l'inscription"
     }
     console.error(error.response?.data)
+  }
+  finally {
+    loading.value = false
   }
 }
 </script>
@@ -107,4 +124,18 @@ button {
 .success {
   color: green;
 }
+.spinner {
+  margin: 10px auto;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 </style>
