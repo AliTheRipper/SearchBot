@@ -21,7 +21,53 @@
 import { ref } from 'vue';
 import MovieModal from './MovieModal.vue';
 
-const props = defineProps(['id', 'movieTitle', 'director', 'year', 'poster', 'summary']);
+const props = defineProps({
+  id: {
+    type: Number,
+    default: 0
+  },
+  movieTitle: {
+    type: String,
+    default: 'N/A'
+  },
+  director: {
+    type: String,
+    default: 'N/A'
+  },
+  year: {
+    type: Number,
+    default: 0
+  },
+  poster: {
+    type: String,
+    default: 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'
+  },
+  summary: {
+    type: String,
+    default: ''
+  },
+  genres: {
+    type: Array,
+    default: () => []
+  },
+  grade: {
+    type: String,
+    default: 'N/A'
+  },
+  length: {
+    type: String,
+    default: 'N/A'
+  },
+  ageRating: {
+    type: String,
+    default: 'N/A'
+  },
+  mainActors: {
+    type: Array,
+    default: () => []
+  }
+});
+
 const showModal = ref(false);
 
 const movieData = {
@@ -30,7 +76,12 @@ const movieData = {
   director: props.director,
   year: props.year,
   poster: props.poster,
-  summary: props.summary
+  summary: props.summary,
+  genres: props.genres,
+  grade: props.grade,
+  length: props.length,
+  ageRating: props.ageRating,
+  mainActors: props.mainActors
 };
 
 const openModal = () => {
@@ -61,8 +112,8 @@ const closeModal = () => {
 }
 
 .result-container img {
-    max-height: 300px;
-    width: auto;
+    max-width: 200px;
+    height: auto;
 }
 
 .info {

@@ -3,7 +3,7 @@
     <div class="modal-container">
       <button class="close-button" @click="closeModal">×</button>
       <div class="modal-content">
-        <div class="modal-poster">
+        <div v-if="movie.poster !== 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'" class="modal-poster">
           <img :src="movie.poster" :alt="movie.movieTitle">
         </div>
         <div class="modal-details">
@@ -13,7 +13,28 @@
             <p>{{ movie.summary }}</p>
           </div>
           <div class="modal-technical">
-            <h3>Fiche technique</h3>
+            <div class="technical-grid">
+              <div class="technical-item" v-if="movie.genres && movie.genres.length">
+                <h3 class="label">Genres</h3>
+                <p class="value">{{ movie.genres.join(', ') }}</p>
+              </div>
+              <div class="technical-item" v-if="movie.grade">
+                <h3 class="label">Note</h3>
+                <p class="value">{{ movie.grade }}</p>
+              </div>
+              <div class="technical-item" v-if="movie.length">
+                <h3 class="label">Durée</h3>
+                <p class="value">{{ movie.length }}</p>
+              </div>
+              <div class="technical-item" v-if="movie.ageRating">
+                <h3 class="label">Public</h3>
+                <p class="value">{{ movie.ageRating }}</p>
+              </div>
+              <div class="technical-item" v-if="movie.mainActors && movie.mainActors.length">
+                <h3 class="label">Acteurs</h3>
+                <p class="value">{{ movie.mainActors.join(', ') }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -42,6 +42,11 @@
               :year="item.year"
               :summary="item.summary"
               :poster="item.poster"
+              :genres="item.grades"
+              :grade="item.grade"
+              :length="item.length"
+              :ageRating="item.ageRating"
+              :main-actors="item.mainActors"
             />
           </div>
         </div>
@@ -81,7 +86,12 @@ const handleSearch = async (query) => {
         "director": "Damien Chazelle",
         "year": 2016,
         "summary": "Au cœur de Los Angeles, une actrice en devenir prénommée Mia sert des cafés entre deux auditions. De son côté, Sebastian, passionné de jazz, joue du piano dans des clubs miteux pour assurer sa subsistance. Tous deux sont bien loin de la vie rêvée à laquelle ils aspirent… Le destin va réunir ces doux rêveurs, mais leur coup de foudre résistera-t-il aux tentations, aux déceptions, et à la vie trépidante d’Hollywood ?",
-        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5KIj6aioW1UtUT1IV0qqW5iZbNH.jpg"
+        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5KIj6aioW1UtUT1IV0qqW5iZbNH.jpg",
+        "genres": ["Musical", "Romance", "Drama"],
+        "grade": "8/10",
+        "length": "2h 8min",
+        "ageRating": "PG-13",
+        "mainActors": ["Ryan Gosling", "Emma Stone", "John Legend"]
       },
       {
         "id": 1,
@@ -89,7 +99,12 @@ const handleSearch = async (query) => {
         "director": "Yorgos Lanthimos",
         "year": 2018,
         "summary": "Début du XVIIIème siècle. L’Angleterre et la France sont en guerre. Toutefois, à la cour, la mode est aux courses de canards et à la dégustation d’ananas. La reine Anne, à la santé fragile et au caractère instable, occupe le trône tandis que son amie Lady Sarah gouverne le pays à sa place. Lorsqu’une nouvelle servante, Abigail Hill, arrive à la cour, Lady Sarah la prend sous son aile, pensant qu’elle pourrait être une alliée. Abigail va y voir l’opportunité de renouer avec ses racines aristocratiques. Alors que les enjeux politiques de la guerre absorbent Sarah, Abigail quant à elle parvient à gagner la confiance de la reine et devient sa nouvelle confidente. Cette amitié naissante donne à la jeune femme l’occasion de satisfaire ses ambitions, et elle ne laissera ni homme, ni femme, ni politique, ni même un lapin se mettre en travers de son chemin.",
-        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/bZC5VeHX39PfhsZEcdjD7RHKFSH.jpg"
+        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/bZC5VeHX39PfhsZEcdjD7RHKFSH.jpg",
+        "genres": ["Drama", "History", "Comedy"],
+        "grade": "7.5/10",
+        "length": "1h 59min",
+        "ageRating": "R",
+        "mainActors": ["Olivia Colman", "Emma Stone", "Rachel Weisz"]
       },
       {
         "id": 1,
@@ -97,7 +112,12 @@ const handleSearch = async (query) => {
         "director": "Terry Jones",
         "year": 1979,
         "summary": "En l’an 0, en terre de Galilée, Mandy et son bébé Brian reçoivent la visite des Rois Mages un beau soir de décembre. Ceux‐ci, s’apercevant de leur erreur, remballent prestement leurs présents et filent dans l’étable voisine. Hélas, Brian a tiré le mauvais numéro…",
-        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/6RKbtDCMUaPboo1WYBUCNoVxgA9.jpg"
+        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/6RKbtDCMUaPboo1WYBUCNoVxgA9.jpg",
+        "genres": ["Drama", "History", "Comedy"],
+        "grade": "7.5/10",
+        "length": "1h 59min",
+        "ageRating": "R",
+        "mainActors": ["Olivia Colman", "Emma Stone", "Rachel Weisz"]
       },
       {
         "id": 1,
@@ -105,7 +125,11 @@ const handleSearch = async (query) => {
         "director": "Francis Ford Coppola",
         "year": 1972,
         "summary": "La Seconde Guerre mondiale vient de s'achever. À New York, le « parrain » Don Corleone, l'un des chefs respectés de la mafia, se sent vieillir. Il refuse de s'adapter à son temps et de se lancer, comme ses pairs, dans le trafic de drogue. Une frilosité qui entrave la bonne marche des affaires des autres « familles » et qui lui vaut d'être la cible d'un attentat. Don Corleone survit à ses blessures, mais reste très diminué. Mike, son plus jeune fils, qui jusque-là se tenait à l'écart des affaires de son père, devient le plus dévoué de ses héritiers. Plus efficace que ses frères, Sonny et Fredo, il venge son père et organise l'élimination de ses adversaires…",
-        "poster": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/k3uIbYtiuK8pwbCcbma29nTqmgG.jpg"
+        "genres": ["Drama", "History", "Comedy"],
+        "grade": "7.5/10",
+        "length": "1h 59min",
+        "ageRating": "R",
+        "mainActors": ["Olivia Colman", "Emma Stone", "Rachel Weisz"]
       }
     ]
   } finally {
@@ -127,7 +151,6 @@ const handleSearch = async (query) => {
 .result-title {
   font-size: 3rem;
   text-align: center;
-  margin: 0;
   font-weight: lighter;
 }
 
@@ -151,7 +174,7 @@ const handleSearch = async (query) => {
 .result-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 40px;
   padding: 20px;
   width: 100%;
   max-width: auto;
