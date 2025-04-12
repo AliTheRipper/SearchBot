@@ -1,38 +1,53 @@
 <template>
   <div class="home-container">
-    <div v-if="!displayResults">
+    <!-- La barre de recherche s'affiche en haut sur l'écran des résultats -->
+    <div class="sticky-search" v-if="displayResults">
+      <SearchBar 
+      v-model="currentQuery"
+        ref="searchBar"
+        placeholder="Je veux voir un film d'horreur de plus de deux heures."
+        @search="handleSearch"
+        :disabled="loading"
+      />
+    </div>
+    
+    <!-- La barre de recherche s'affiche initialement au milieu -->
+    <div v-if="!displayResults" class="centered-search">
       <h1 class="title">Que voulez-vous voir ?</h1>
       <div class="div-search-bar">
         <SearchBar 
+          v-model="currentQuery"
           placeholder="Je veux voir un film d'horreur de plus de deux heures."
           @search="handleSearch"
+          :disabled="loading"
         />
       </div>
     </div>
     
+    <!-- Résultats -->
     <div v-if="displayResults">
       <div v-if="!loading">
-        <!-- Pas de résultat -->
         <div v-if="data.length === 0" class="no-results">
-          <h1 class="title">Aucun résultat trouvé.</h1>
+          <h1 class="title dim-text">Aucun résultat trouvé.</h1>
         </div>
-
-        <!-- Affichage des résultats -->
-        <div v-else class="result-grid">
-          <Result
-            v-for="item in data"
-            :key="item.id"
-            :id="item.id"
-            :movie-title="item.movieTitle"
-            :director="item.director"
-            :year="item.year"
-            :summary="item.summary"
-            :poster="item.poster"
-          />
+        <div v-else >
+          <h1 class="result-title">Résultats</h1>
+          <div class="result-grid">
+            <Result
+              v-for="item in data"
+              :key="item.id"
+              :id="item.id"
+              :movie-title="item.movieTitle"
+              :director="item.director"
+              :year="item.year"
+              :summary="item.summary"
+              :poster="item.poster"
+            />
+          </div>
         </div>
       </div>
       <div v-else class="loading">
-        <h1 class="title">Chargement...</h1>
+        <h1 class="title dim-text">Chargement des résultats...</h1>
       </div>
     </div>
   </div>
@@ -43,17 +58,19 @@ import SearchBar from '@/views/SearchBar.vue'
 import Result from '@/views/Result.vue'
 import { ref } from 'vue'
 
-const displayResults = ref(false) // Start with search UI
+const displayResults = ref(false)
 const data = ref([])
 const loading = ref(false)
+const currentQuery = ref("")
 
 const handleSearch = async (query) => {
+  currentQuery.value = query
   displayResults.value = true
   loading.value = true
 
   try {
     const response = await axios.post('/recherche', { query })
-    data.value = response.data.slice(0, 6) // Limit to 5 results
+    data.value = response.data.slice(0, 6)
   } catch (e) {
     console.error(e)
     data.value = []
@@ -71,6 +88,17 @@ const handleSearch = async (query) => {
   margin-top: 15rem;
   margin-bottom: 10rem;
   font-weight: lighter;
+}
+
+.result-title {
+  font-size: 3rem;
+  text-align: center;
+  margin: 0;
+  font-weight: lighter;
+}
+
+.dim-text {
+  color: #5e5e5e
 }
 
 .home-container {
@@ -111,5 +139,20 @@ const handleSearch = async (query) => {
 
 .result-grid > * {
   width: 100%;
+}
+
+.sticky-search {
+  position: sticky;
+  top: 0;
+  padding: 2rem;
+  z-index: 1;
+}
+
+.centered-search {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 </style>

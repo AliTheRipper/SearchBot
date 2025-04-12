@@ -5,6 +5,8 @@
             <h1>{{ movieTitle }}</h1>
             <h2>{{ director }} - {{ year }}</h2>
             <p>{{ summary }}</p>
+            <br>
+            <p>(Cliquez pour afficher la fiche technique)</p>
         </div>
     </div>
 </template>
@@ -26,7 +28,7 @@ const openModal = function(id) {
     flex-direction: row;
     align-items: flex-start;
     gap: 10px;
-    max-height: 200px;
+    max-height: 300px;
     background: #383838;
     border-radius: 20px;
     overflow: hidden;
@@ -40,7 +42,7 @@ const openModal = function(id) {
 }
 
 .result-container img {
-    max-height: 200px;
+    max-height: 300px;
     width: auto;
 }
 

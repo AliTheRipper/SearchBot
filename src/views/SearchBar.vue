@@ -3,38 +3,41 @@
     <input
       type="text"
       :placeholder="placeholder"
-      v-model="searchQuery"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
       @keyup.enter="onSearch"
+      :disabled="disabled"
     />
-    <button style="display:inline-block" @click="onSearch">
+    <button @click="onSearch" :disabled="disabled">
       <img src="../assets/search_white.png" class="loupe"/>
     </button>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
+const emit = defineEmits(["search", "update:modelValue"]);
 
-// Data
-const searchQuery = ref('');
-
-const emit = defineEmits(["search"])
-
-// Props
 const props = defineProps({
-	placeholder: {
-		type: String,
-		default: 'Tapez votre recherche...'
-	}
+  placeholder: {
+    type: String,
+    default: 'Tapez votre recherche...'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  modelValue: {
+    type: String,
+    default: ''
+  }
 });
 
-// Methods
-const onSearch = function() {
-	// Émet l'événement "search" avec le contenu du champ de recherche
-	emit("search", searchQuery.value)
-}
-
+const onSearch = () => {
+  if (!props.disabled) {
+    emit('search', props.modelValue);
+  }
+};
 </script>
 
 <style scoped>
@@ -56,6 +59,11 @@ input {
   font-size: large;
 }
 
+input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 button {
   padding: 8px 16px;
   background: "../assets/search.png";
@@ -67,6 +75,11 @@ button {
   border-left: 2px solid #262626;
   cursor: pointer;
   height: 4rem;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 button:hover {
