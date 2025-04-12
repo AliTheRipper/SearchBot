@@ -73,6 +73,7 @@ const handleSearch = async (query) => {
     data.value = response.data.slice(0, 6) // Seuls les 6 premiers résultats sont récupérés ; à modifier/retirer au besoin
   } catch (e) {
     console.error(e)
+    // A remplacer par data.value = [] après les tests
     data.value = [
     {
         "id": 1,
