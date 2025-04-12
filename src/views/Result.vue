@@ -1,24 +1,44 @@
 <template>
     <div class="result-container" @click="openModal">
-        <img :src="poster">
+        <img :src="poster" :alt="movieTitle">
         <div class="info">
             <h1>{{ movieTitle }}</h1>
-            <h2>{{ director }} - {{ year }}</h2>
+            <h2>{{ director }} • {{ year }}</h2>
             <p>{{ summary }}</p>
             <br>
-            <p>(Cliquez pour afficher la fiche technique)</p>
+            <p class="dim-text">(Cliquez pour afficher la fiche technique)</p>
         </div>
     </div>
+    
+    <MovieModal 
+      v-if="showModal"
+      :movie="movieData"
+      @close="closeModal"
+    />
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref } from 'vue';
+import MovieModal from './MovieModal.vue';
 
-defineProps(['id', 'movieTitle', 'director', 'year', 'poster', 'summary']);
+const props = defineProps(['id', 'movieTitle', 'director', 'year', 'poster', 'summary']);
+const showModal = ref(false);
 
-const openModal = function(id) {
-    // Ouvrir le popup
-    console.log("film " + id + " cliqué")
+const movieData = {
+  id: props.id,
+  movieTitle: props.movieTitle,
+  director: props.director,
+  year: props.year,
+  poster: props.poster,
+  summary: props.summary
+};
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
 };
 </script>
 
@@ -37,7 +57,6 @@ const openModal = function(id) {
 }
 
 .result-container:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
     background: #4e4e4e;
 }
 
@@ -55,12 +74,17 @@ const openModal = function(id) {
     overflow: hidden;
 }
 
-.info h1,
-.info h2 {
+.info h1 {
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.info h2 {
+    color: #a0a0a0;
+    font-weight: normal;
+    margin-top: 0.5rem;
 }
 
 .info p {
@@ -71,6 +95,15 @@ const openModal = function(id) {
     text-overflow: ellipsis;
     margin-top: 8px;
     word-break: break-word;
+}
+
+.home-container {
+  position: relative;
+  z-index: 1;
+}
+
+.dim-text {
+  color: #a0a0a0
 }
 </style>
 
