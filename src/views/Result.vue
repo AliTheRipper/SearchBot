@@ -19,14 +19,44 @@ const openModal = function(id) {
 }
 </script>
 
-<style>
+<style scoped>
 .result-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    max-width: 30%;
+    max-height: 300px;
+    background: #383838;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.result-container img {
+    max-height: 300px;
 }
 
 .info {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    padding: 10px;
+    width: 100%;
+}
+
+.info p {
+    display: -webkit-box;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.info h1 {
+    margin: 0;
+}
+
+.info h2 {
+    margin: 0;
 }
 </style>
