@@ -19,22 +19,32 @@
       <router-link to="/historique" class="nav-item" @click="$emit('closeSidebar') ">Historique</router-link>
       <router-link to="/Register" class="nav-item" @click="$emit('closeSidebar') ">Register</router-link>
       <router-link to="/" class="nav-item" @click="$emit('closeSidebar') ">Login</router-link>
-      <router-link to="/logout" class="nav-item" @click="$emit('closeSidebar')">Déconnexion</router-link>
-    </nav>
+      <button class="nav-item" @click="handleLogout">Déconnexion</button>    </nav>
   </aside>
 </template>
 
 <script setup>
 import { onMounted, onUnmounted, ref, defineEmits } from 'vue'
+import { useRouter } from 'vue-router'
+import { isAuthenticated } from '../auth' // adapte le chemin si besoin
 
 const emit = defineEmits(['closeSidebar'])
 const sidebarRef = ref(null)
+const router = useRouter()
+
 
 const handleClickOutside = (event) => {
   // Vérifie que le clic ne s'est pas fait DANS la sidebar
   if (sidebarRef.value && !sidebarRef.value.contains(event.target)) {
     emit('closeSidebar')
   }
+}
+
+const handleLogout = () => {
+  isAuthenticated.value = false
+  localStorage.removeItem('token') // seulement si tu utilises des tokens
+  emit('closeSidebar') // pour fermer la sidebar
+  router.push('/') // redirige vers la page d’inscription
 }
 
 onMounted(() => {

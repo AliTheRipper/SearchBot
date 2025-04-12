@@ -19,7 +19,10 @@
     <!-- Content wrapper with flex to push footer to bottom -->
     <div class="content-wrapper">
       <div class="main-content">
-        <router-view />
+        <!-- Passe l'état de la sidebar au composant via v-slot -->
+        <router-view v-slot="{ Component }">
+          <component :is="Component" :isSidebarOpen="sidebarVisible" />
+        </router-view>
       </div>
       <footer class="footer">
         Pied de page
@@ -33,12 +36,12 @@ import SideBar from './views/SideBar.vue'
 import { isAuthenticated } from './auth'
 import { ref } from 'vue';
 
-// Data
-const sidebarVisible = ref(false);
+// État de la sidebar
+const sidebarVisible = ref(false)
 
-// Methods
-const toggleSidebar = function() {
-	sidebarVisible.value = !sidebarVisible.value
+// Méthode de bascule
+const toggleSidebar = () => {
+  sidebarVisible.value = !sidebarVisible.value
 }
 
 </script>
@@ -46,7 +49,7 @@ const toggleSidebar = function() {
 <style>
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sansf-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>
 
