@@ -12,35 +12,54 @@
 <script setup>
 import { defineProps } from 'vue';
 
-defineProps(['id','movieTitle', 'director', 'year', 'poster', 'summary'])
+defineProps(['id', 'movieTitle', 'director', 'year', 'poster', 'summary']);
 
 const openModal = function(id) {
     // Ouvrir le popup
-}
+    console.log("film " + id + " cliqué")
+};
 </script>
 
 <style scoped>
 .result-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
-    max-width: 30%;
+    max-width: 500px;
     max-height: 300px;
     background: #383838;
     border-radius: 20px;
     overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.result-container:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: #4e4e4e;
 }
 
 .result-container img {
     max-height: 300px;
+    width: auto;
 }
 
 .info {
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.info h1,
+.info h2 {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .info p {
@@ -50,13 +69,7 @@ const openModal = function(id) {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
-}
-
-.info h1 {
-    margin: 0;
-}
-
-.info h2 {
-    margin: 0;
+    word-break: break-word;
 }
 </style>
+
