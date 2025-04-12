@@ -26,8 +26,7 @@ const openModal = function(id) {
     flex-direction: row;
     align-items: flex-start;
     gap: 10px;
-    max-width: 500px;
-    max-height: 300px;
+    max-height: 200px;
     background: #383838;
     border-radius: 20px;
     overflow: hidden;
@@ -36,12 +35,12 @@ const openModal = function(id) {
 }
 
 .result-container:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
     background: #4e4e4e;
 }
 
 .result-container img {
-    max-height: 300px;
+    max-height: 200px;
     width: auto;
 }
 
@@ -64,11 +63,11 @@ const openModal = function(id) {
 
 .info p {
     display: -webkit-box;
-    -webkit-line-clamp: 10;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0;
+    margin-top: 8px;
     word-break: break-word;
 }
 </style>
