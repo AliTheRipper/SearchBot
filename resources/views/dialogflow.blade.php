@@ -8,10 +8,16 @@
 </head>
 <body>
     <h2>Test Dialogflow avec Laravel</h2>
-    <input type="text" id="message" placeholder="Écris ta requête ici...">
-    <button onclick="sendMessage()">Envoyer</button>
-    <p>Réponse : <span id="response"></span></p>
+    <textarea id="message" placeholder="Écris ta requête ici..." oninput="adjustHeight(this)"></textarea>
 
+    <script>
+    function adjustHeight(el) {
+        el.style.height = 'auto'; // Réinitialiser la hauteur avant de recalculer
+        el.style.height = (el.scrollHeight) + 'px'; // Ajuster la hauteur au contenu
+    }
+    </script>
+    <button onclick="sendMessage()">Envoyer</button>
+    <p><strong>Réponse de l'agent :</strong> <span id="response"></span></p>
     <script>
         function sendMessage() {
             var message = $('#message').val();
@@ -21,6 +27,9 @@
                 data: { message: message, _token: '{{ csrf_token() }}' },
                 success: function(response) {
                     $('#response').text(response.reply);
+                },
+                error: function(xhr) {
+                    alert('Erreur : ' + xhr.responseText);
                 }
             });
         }
