@@ -1,7 +1,5 @@
 <template>
   <aside ref="sidebarRef" class="SideBar">
-    <SideBar v-if="isSidebarOpen" @closeSidebar="isSidebarOpen = false" />
-
     <div class="sidebar-header">
       <!-- Logo: clickable to go home -->
       <router-link to="/logo" class="logo-link">
@@ -19,9 +17,11 @@
       <router-link to="/historique" class="nav-item" @click="$emit('closeSidebar') ">Historique</router-link>
       <router-link to="/Register" class="nav-item" @click="$emit('closeSidebar') ">Register</router-link>
       <router-link to="/" class="nav-item" @click="$emit('closeSidebar') ">Login</router-link>
-      <button class="nav-item" @click="handleLogout">Déconnexion</button>    </nav>
+      <button class="nav-item" @click="handleLogout">Déconnexion</button>
+    </nav>
   </aside>
 </template>
+
 
 <script setup>
 import { onMounted, onUnmounted, ref, defineEmits } from 'vue'

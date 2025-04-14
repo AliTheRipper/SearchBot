@@ -4,15 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('films', function (Blueprint $table) {
             $table->id();
             $table->string('titre');
-            $table->integer('annee_sortie')->nullable();
-            $table->string('genre', 100)->nullable();
-            $table->integer('id_tmdb')->unique();
+            $table->text('description')->nullable();
+            $table->string('poster')->nullable();
+            $table->date('date_sortie')->nullable();
+            $table->float('note')->nullable(); // ex: 8.5
             $table->timestamps();
         });
     }
@@ -22,3 +24,4 @@ return new class extends Migration {
         Schema::dropIfExists('films');
     }
 };
+

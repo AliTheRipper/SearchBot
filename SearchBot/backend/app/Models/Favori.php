@@ -8,13 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Favori extends Model
 {
-    public function utilisateur(): BelongsTo
+    
+    // Favori.php
+    public function user()
     {
-        return $this->belongsTo(User::class, 'utilisateur_id');
+    return $this->belongsTo(User::class);
     }
 
-    public function film(): BelongsTo
+    public function film()
     {
-        return $this->belongsTo(Film::class, 'film_id');
+    return $this->belongsTo(Film::class);
     }
+
 }
