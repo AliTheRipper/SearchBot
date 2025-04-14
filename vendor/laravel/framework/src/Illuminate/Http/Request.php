@@ -42,7 +42,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     /**
      * All of the converted files for the request.
      *
-     * @var array<int, \Illuminate\Http\UploadedFile|\Illuminate\Http\UploadedFile[]>
+     * @var array
      */
     protected $convertedFiles;
 
@@ -363,10 +363,10 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         return tap($this, function (Request $request) use ($input) {
             $request->getInputSource()
-                ->replace((new Collection($input))->reduce(
-                    fn ($requestInput, $value, $key) => data_set($requestInput, $key, $value),
-                    $this->getInputSource()->all()
-                ));
+                    ->replace(collect($input)->reduce(
+                        fn ($requestInput, $value, $key) => data_set($requestInput, $key, $value),
+                        $this->getInputSource()->all()
+                    ));
         });
     }
 

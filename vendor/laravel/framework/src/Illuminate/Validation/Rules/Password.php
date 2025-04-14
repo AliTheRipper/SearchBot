@@ -111,6 +111,7 @@ class Password implements Rule, DataAwareRule, ValidatorAwareRule
      * Create a new rule instance.
      *
      * @param  int  $min
+     * @return void
      */
     public function __construct($min)
     {

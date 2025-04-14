@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Google\Auth\Credentials\ServiceAccountCredentials;
+use App\Http\Controllers\testController;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+
 
 class DialogflowController extends Controller
 {
-    public $webhookResponse = 'Aucune réponse de webhook reçue.';
-
     public function index()
     {
         return view('dialogflow');
@@ -47,7 +49,7 @@ class DialogflowController extends Controller
 
         $client = new Client();
         try {
-            $response = $client->post(
+            $reponse = $client->post(
                 "https://dialogflow.googleapis.com/v2/projects/{$projectId}/agent/sessions/{$sessionId}:detectIntent",
                 [
                     'headers' => [
@@ -58,14 +60,32 @@ class DialogflowController extends Controller
                 ]
             );
 
-            $replyData = json_decode($response->getBody(), true);
-
+            
+            $replyData = json_decode($reponse->getBody(), true);
             $fulfillmentText = $replyData['queryResult']['fulfillmentText'] ?? 'Réponse vide.';
-            $webhookPayload = $replyData['queryResult']['webhookPayload']['fields']['webhookResponse']['stringValue'] ?? 'Aucune réponse de webhook reçue.';
+            $jsonArray = json_decode($fulfillmentText, true);
+
+            $symfonyRequest = SymfonyRequest::create(
+                '/fake-url',
+                'POST',
+                [],     // query parameters
+                [],     // cookies
+                [],     // files
+                [],     // server
+                json_encode($jsonArray) // contenu brut JSON
+            );
+
+            $laravelRequest = Request::createFromBase($symfonyRequest);
+            $laravelRequest->headers->set('Content-Type', 'application/json');
+
+            $tmdb = new testController();
+            $reponse = $tmdb->searchByJSON($laravelRequest);
+
+            $res = json_decode($reponse->getContent(), true);
 
             return response()->json([
-                'reply' => $fulfillmentText,
-                'webhook_reply' => $webhookPayload,
+                'reply' => $reponse,
+                'movies' => $res
             ]);
         } catch (\Exception $e) {
             return response()->json(['reply' => 'Erreur API : ' . $e->getMessage()]);

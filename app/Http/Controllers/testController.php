@@ -108,7 +108,306 @@ class testController extends Controller
 
     public function searchByJSON(Request $request)
     {
-        /*$data = $request->json()->all();
+        
+
+        $data = $request->json()->all();
+        $movies = [];
+
+        if (empty($data)) {
+            return response()->json(['error' => 'Aucun critère reçu.'], 400);
+        }
+        
+
+        // 1. Initialisation par critère principal (titre / acteur / genre)
+        if (isset($data['titre'])) {
+            // Recherche par titre
+            $response = Http::get("https://api.themoviedb.org/3/search/movie", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'query' => $data['titre'],
+                'language' => 'fr-FR'
+            ]);
+            $movies = $response->json()['results'] ?? [];
+        
+        } elseif (isset($data['name']) && isset($data['genre'])) {
+            // Recherche combinee par acteur + genre
+        
+            // 1. Recuperer l’ID de l’acteur
+            $searchResponse = Http::get("https://api.themoviedb.org/3/search/person", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'query' => $data['name'],
+                'language' => 'fr-FR'
+            ]);
+            $searchData = $searchResponse->json();
+        
+            if (empty($searchData['results'])) {
+                return response()->json(['error' => 'Acteur non trouve.'], 404);
+            }
+        
+            $actorId = $searchData['results'][0]['id'];
+        
+            // 2. Recuperer les films de l’acteur
+            $moviesResponse = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'language' => 'fr-FR'
+            ]);
+            $actorMovies = $moviesResponse->json()['cast'] ?? [];
+        
+            // 3. Recuperer la liste des genres pour trouver l’ID du genre
+            $genreListResponse = Http::get("https://api.themoviedb.org/3/genre/movie/list", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'language' => 'fr-FR'
+            ]);
+            $genres = $genreListResponse->json()['genres'] ?? [];
+        
+            $genreId = null;
+            foreach ($genres as $genre) {
+                if (strtolower($genre['name']) === strtolower($data['genre'])) {
+                    $genreId = $genre['id'];
+                    break;
+                }
+            }
+        
+            if (!$genreId) {
+                return response()->json(['error' => 'Genre non trouve.'], 404);
+            }
+        
+            // 4. Filtrer les films de l’acteur par genre
+            $movies = array_filter($actorMovies, function ($movie) use ($genreId) {
+                return isset($movie['genre_ids']) && in_array($genreId, $movie['genre_ids']);
+            });
+            
+        
+            $movies = array_values($movies);
+        }
+        elseif (isset($data['name'])) {
+            $searchResponse = Http::get("https://api.themoviedb.org/3/search/person", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'query' => $data['name'],
+                'language' => 'fr-FR'
+            ]);
+            $searchData = $searchResponse->json();
+
+            if (empty($searchData['results'])) {
+                return response()->json(['error' => 'Acteur non trouve.'], 404);
+            }
+
+            $actorId = $searchData['results'][0]['id'];
+
+            $moviesResponse = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'language' => 'fr-FR'
+            ]);
+
+            $movies = $moviesResponse->json()['cast'] ?? [];
+
+        } elseif (isset($data['genre'])) {
+            $genreListResponse = Http::get("https://api.themoviedb.org/3/genre/movie/list", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'language' => 'fr-FR'
+            ]);
+
+            $genres = $genreListResponse->json()['genres'] ?? [];
+
+            $genreId = null;
+            foreach ($genres as $genre) {
+                if (strtolower($genre['name']) === strtolower($data['genre'])) {
+                    $genreId = $genre['id'];
+                    break;
+                }
+            }
+
+            if (!$genreId) {
+                return response()->json(['error' => 'Genre non trouve.'], 404);
+            }
+
+            $genreMoviesResponse = Http::get("https://api.themoviedb.org/3/discover/movie", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                'with_genres' => $genreId,
+                'language' => 'fr-FR'
+            ]);
+
+            $movies = $genreMoviesResponse->json()['results'] ?? [];
+
+        } else {
+            if (isset($data['vote_average']) || isset($data['original_language']) || isset($data['gender'])) {
+                $movies = [];
+            
+                for ($page = 1; $page <= 2; $page++) {
+                    $response = Http::get("https://api.themoviedb.org/3/movie/popular", [
+                        'api_key' => '8b2be63b63004f08e7a50266f157e095',
+                        'page' => $page
+                    ]);
+            
+                    $moviesOnPage = $response->json()['results'] ?? [];
+                    $movies = array_merge($movies, $moviesOnPage);
+                }
+            
+                $movies = array_filter($movies, function ($movie) use ($data) {
+                    $isValid = true;
+            
+                    if (isset($data['vote_average'])) {
+                        $isValid = $isValid && isset($movie['vote_average']) && $movie['vote_average'] >= $data['vote_average'];
+                    }
+            
+                    if (isset($data['original_language'])) {
+                        $isValid = $isValid && isset($movie['original_language']) && $movie['original_language'] === $data['original_language'];
+                    }
+            
+                    return $isValid;
+                });
+            
+                $movies = array_values($movies); // Reindexer
+            
+                if ($data['mainActor'] == 'true') {
+                    $filtered = [];
+            
+                    foreach ($movies as $movie) {
+                        $creditsResponse = Http::get("https://api.themoviedb.org/3/movie/{$movie['id']}/credits", [
+                            'api_key' => '8b2be63b63004f08e7a50266f157e095'
+                        ]);
+            
+                        $credits = $creditsResponse->json();
+                        $cast = $credits['cast'] ?? [];
+            
+                        if (!empty($cast) && isset($cast[1]['gender']) && $cast[1]['gender'] == $data['gender']) {
+                            $movie['main_actor'] = $cast[1]['name'];
+                            $filtered[] = $movie;
+                        }
+                    }
+            
+                    $movies = $filtered;
+                }
+            }else {
+                return response()->json(['error' => 'Aucun critère principal fourni.'], 400);
+            }
+        }
+        
+
+        // 2. Filtrer par langue d'origine
+        if (isset($data['original_language'])) {
+            $movies = array_filter($movies, function ($movie) use ($data) {
+                return isset($movie['original_language']) && $movie['original_language'] === $data['original_language'];
+            });
+        }
+
+        // 3. Filtrer par vote minimum
+        if (isset($data['vote_average'])) {
+            $movies = array_filter($movies, function ($movie) use ($data) {
+                return isset($movie['vote_average']) && $movie['vote_average'] >= $data['vote_average'];
+            });
+        }
+
+        // 4. Filtrer par genre de l'acteur principal
+        if (isset($data['gender'])) {
+            $filtered = [];
+            foreach ($movies as $movie) {
+                $creditsResponse = Http::get("https://api.themoviedb.org/3/movie/{$movie['id']}/credits", [
+                    'api_key' => '8b2be63b63004f08e7a50266f157e095'
+                ]);
+
+                $credits = $creditsResponse->json();
+                $cast = $credits['cast'] ?? [];
+
+                if (!empty($cast) && isset($cast[0]['gender']) && $cast[0]['gender'] == $data['gender']) {
+                    $movie['main_actor'] = $cast[0]['name'];
+                    $filtered[] = $movie;
+                }
+            }
+            $movies = $filtered;
+        }
+
+        if (isset($data['periode'])) {
+            $periode = strtolower($data['periode']);
+            $startYear = 0;
+            $endYear = 9999;
+        
+            switch ($periode) {
+                case 'années 90':
+                    $startYear = 1990;
+                    $endYear = 1999;
+                    break;
+                case 'années 2000':
+                    $startYear = 2000;
+                    $endYear = 2009;
+                    break;
+                case 'annés 2010':
+                    $startYear = 2010;
+                    $endYear = 2019;
+                    break;
+                case 'années 2020':
+                    $startYear = 2020;
+                    $endYear = 2029;
+                    break;
+                // Tu peux rajouter d'autres periodes ici
+            }
+        
+            $movies = array_filter($movies, function ($movie) use ($startYear, $endYear) {
+                if (!isset($movie['release_date']) || empty($movie['release_date'])) {
+                    return false;
+                }
+                $year = intval(substr($movie['release_date'], 0, 4));
+                return $year >= $startYear && $year <= $endYear;
+            });
+        
+            $movies = array_values($movies);
+        }
+
+        // 5. Ajouter les noms des acteurs (optionnel)
+        $moviesWithActors = [];
+        foreach ($movies as $movie) {
+            $creditsResponse = Http::get("https://api.themoviedb.org/3/movie/{$movie['id']}/credits", [
+                'api_key' => '8b2be63b63004f08e7a50266f157e095'
+            ]);
+            $credits = $creditsResponse->json();
+            $movie['actors'] = array_column($credits['cast'] ?? [], 'name');
+            $moviesWithActors[] = $movie;
+        }
+
+        return response()->json(array_values($moviesWithActors));
+
+    }
+
+
+    public function getMoviesByActor(Request $request)
+    {
+        $actorName = $request->json()->all();
+
+        if (!$actorName) {
+            return response()->json(['error' => 'Veuillez fournir un nom d\'acteur.'], 400);
+        }
+
+        $searchResponse = Http::get("https://api.themoviedb.org/3/search/person", [
+            'api_key' => '8b2be63b63004f08e7a50266f157e095', 
+            'query' => $actorName['name'],
+            'language' => 'fr-FR'
+        ]);
+
+        $searchData = $searchResponse->json();
+
+        if (empty($searchData['results'])) {
+            return response()->json(['error' => 'Acteur non trouve.'], 404);
+        }
+
+        $actorId = $searchData['results'][0]['id'];
+
+        $moviesResponse = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
+            'api_key' => '8b2be63b63004f08e7a50266f157e095',
+            'language' => 'fr-FR'
+        ]);
+
+        $movieData = $moviesResponse->json();
+
+        $movies = $movieData['cast'] ?? [];
+
+
+        return response()->json([
+            'acteur' => $actorName['name'],
+            'nombre_de_films' => count($movies),
+            'films' => $movies
+        ]);
+    }
+
+    /*$data = $request->json()->all();
 
         if(!isset($data['titre']))
         {
@@ -411,297 +710,5 @@ class testController extends Controller
 
 
         return response()->json(array_values($moviesWithActors));*/
-
-        $data = $request->json()->all();
-        $movies = [];
-
-        // 1. Initialisation par critère principal (titre / acteur / genre)
-        if (isset($data['titre'])) {
-            // Recherche par titre
-            $response = Http::get("https://api.themoviedb.org/3/search/movie", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'query' => $data['titre'],
-                'language' => 'fr-FR'
-            ]);
-            $movies = $response->json()['results'] ?? [];
-        
-        } elseif (isset($data['name']) && isset($data['genre'])) {
-            // Recherche combinee par acteur + genre
-        
-            // 1. Recuperer l’ID de l’acteur
-            $searchResponse = Http::get("https://api.themoviedb.org/3/search/person", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'query' => $data['name'],
-                'language' => 'fr-FR'
-            ]);
-            $searchData = $searchResponse->json();
-        
-            if (empty($searchData['results'])) {
-                return response()->json(['error' => 'Acteur non trouve.'], 404);
-            }
-        
-            $actorId = $searchData['results'][0]['id'];
-        
-            // 2. Recuperer les films de l’acteur
-            $moviesResponse = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'language' => 'fr-FR'
-            ]);
-            $actorMovies = $moviesResponse->json()['cast'] ?? [];
-        
-            // 3. Recuperer la liste des genres pour trouver l’ID du genre
-            $genreListResponse = Http::get("https://api.themoviedb.org/3/genre/movie/list", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'language' => 'fr-FR'
-            ]);
-            $genres = $genreListResponse->json()['genres'] ?? [];
-        
-            $genreId = null;
-            foreach ($genres as $genre) {
-                if (strtolower($genre['name']) === strtolower($data['genre'])) {
-                    $genreId = $genre['id'];
-                    break;
-                }
-            }
-        
-            if (!$genreId) {
-                return response()->json(['error' => 'Genre non trouve.'], 404);
-            }
-        
-            // 4. Filtrer les films de l’acteur par genre
-            $movies = array_filter($actorMovies, function ($movie) use ($genreId) {
-                return isset($movie['genre_ids']) && in_array($genreId, $movie['genre_ids']);
-            });
-            
-        
-            $movies = array_values($movies);
-        }
-        elseif (isset($data['name'])) {
-            $searchResponse = Http::get("https://api.themoviedb.org/3/search/person", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'query' => $data['name'],
-                'language' => 'fr-FR'
-            ]);
-            $searchData = $searchResponse->json();
-
-            if (empty($searchData['results'])) {
-                return response()->json(['error' => 'Acteur non trouve.'], 404);
-            }
-
-            $actorId = $searchData['results'][0]['id'];
-
-            $moviesResponse = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'language' => 'fr-FR'
-            ]);
-
-            $movies = $moviesResponse->json()['cast'] ?? [];
-
-        } elseif (isset($data['genre'])) {
-            $genreListResponse = Http::get("https://api.themoviedb.org/3/genre/movie/list", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'language' => 'fr-FR'
-            ]);
-
-            $genres = $genreListResponse->json()['genres'] ?? [];
-
-            $genreId = null;
-            foreach ($genres as $genre) {
-                if (strtolower($genre['name']) === strtolower($data['genre'])) {
-                    $genreId = $genre['id'];
-                    break;
-                }
-            }
-
-            if (!$genreId) {
-                return response()->json(['error' => 'Genre non trouve.'], 404);
-            }
-
-            $genreMoviesResponse = Http::get("https://api.themoviedb.org/3/discover/movie", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                'with_genres' => $genreId,
-                'language' => 'fr-FR'
-            ]);
-
-            $movies = $genreMoviesResponse->json()['results'] ?? [];
-
-        } else {
-            if (isset($data['vote_average']) || isset($data['original_language']) || isset($data['gender'])) {
-                $movies = [];
-            
-                for ($page = 1; $page <= 2; $page++) {
-                    $response = Http::get("https://api.themoviedb.org/3/movie/popular", [
-                        'api_key' => '8b2be63b63004f08e7a50266f157e095',
-                        'page' => $page
-                    ]);
-            
-                    $moviesOnPage = $response->json()['results'] ?? [];
-                    $movies = array_merge($movies, $moviesOnPage);
-                }
-            
-                $movies = array_filter($movies, function ($movie) use ($data) {
-                    $isValid = true;
-            
-                    if (isset($data['vote_average'])) {
-                        $isValid = $isValid && isset($movie['vote_average']) && $movie['vote_average'] >= $data['vote_average'];
-                    }
-            
-                    if (isset($data['original_language'])) {
-                        $isValid = $isValid && isset($movie['original_language']) && $movie['original_language'] === $data['original_language'];
-                    }
-            
-                    return $isValid;
-                });
-            
-                $movies = array_values($movies); // Reindexer
-            
-                if ($data['mainActor'] == 'true') {
-                    $filtered = [];
-            
-                    foreach ($movies as $movie) {
-                        $creditsResponse = Http::get("https://api.themoviedb.org/3/movie/{$movie['id']}/credits", [
-                            'api_key' => '8b2be63b63004f08e7a50266f157e095'
-                        ]);
-            
-                        $credits = $creditsResponse->json();
-                        $cast = $credits['cast'] ?? [];
-            
-                        if (!empty($cast) && isset($cast[1]['gender']) && $cast[1]['gender'] == $data['gender']) {
-                            $movie['main_actor'] = $cast[1]['name'];
-                            $filtered[] = $movie;
-                        }
-                    }
-            
-                    $movies = $filtered;
-                }
-            }else {
-                return response()->json(['error' => 'Aucun critère principal fourni.'], 400);
-            }
-        }
-        
-
-        // 2. Filtrer par langue d'origine
-        if (isset($data['original_language'])) {
-            $movies = array_filter($movies, function ($movie) use ($data) {
-                return isset($movie['original_language']) && $movie['original_language'] === $data['original_language'];
-            });
-        }
-
-        // 3. Filtrer par vote minimum
-        if (isset($data['vote_average'])) {
-            $movies = array_filter($movies, function ($movie) use ($data) {
-                return isset($movie['vote_average']) && $movie['vote_average'] >= $data['vote_average'];
-            });
-        }
-
-        // 4. Filtrer par genre de l'acteur principal
-        if (isset($data['gender'])) {
-            $filtered = [];
-            foreach ($movies as $movie) {
-                $creditsResponse = Http::get("https://api.themoviedb.org/3/movie/{$movie['id']}/credits", [
-                    'api_key' => '8b2be63b63004f08e7a50266f157e095'
-                ]);
-
-                $credits = $creditsResponse->json();
-                $cast = $credits['cast'] ?? [];
-
-                if (!empty($cast) && isset($cast[0]['gender']) && $cast[0]['gender'] == $data['gender']) {
-                    $movie['main_actor'] = $cast[0]['name'];
-                    $filtered[] = $movie;
-                }
-            }
-            $movies = $filtered;
-        }
-
-        if (isset($data['periode'])) {
-            $periode = strtolower($data['periode']);
-            $startYear = 0;
-            $endYear = 9999;
-        
-            switch ($periode) {
-                case 'années 90':
-                    $startYear = 1990;
-                    $endYear = 1999;
-                    break;
-                case 'années 2000':
-                    $startYear = 2000;
-                    $endYear = 2009;
-                    break;
-                case 'annés 2010':
-                    $startYear = 2010;
-                    $endYear = 2019;
-                    break;
-                case 'années 2020':
-                    $startYear = 2020;
-                    $endYear = 2029;
-                    break;
-                // Tu peux rajouter d'autres periodes ici
-            }
-        
-            $movies = array_filter($movies, function ($movie) use ($startYear, $endYear) {
-                if (!isset($movie['release_date']) || empty($movie['release_date'])) {
-                    return false;
-                }
-                $year = intval(substr($movie['release_date'], 0, 4));
-                return $year >= $startYear && $year <= $endYear;
-            });
-        
-            $movies = array_values($movies);
-        }
-
-        // 5. Ajouter les noms des acteurs (optionnel)
-        $moviesWithActors = [];
-        foreach ($movies as $movie) {
-            $creditsResponse = Http::get("https://api.themoviedb.org/3/movie/{$movie['id']}/credits", [
-                'api_key' => '8b2be63b63004f08e7a50266f157e095'
-            ]);
-            $credits = $creditsResponse->json();
-            $movie['actors'] = array_column($credits['cast'] ?? [], 'name');
-            $moviesWithActors[] = $movie;
-        }
-
-        return response()->json(array_values($moviesWithActors));
-
-    }
-
-
-    public function getMoviesByActor(Request $request)
-    {
-        $actorName = $request->json()->all();
-
-        if (!$actorName) {
-            return response()->json(['error' => 'Veuillez fournir un nom d\'acteur.'], 400);
-        }
-
-        $searchResponse = Http::get("https://api.themoviedb.org/3/search/person", [
-            'api_key' => '8b2be63b63004f08e7a50266f157e095', 
-            'query' => $actorName['name'],
-            'language' => 'fr-FR'
-        ]);
-
-        $searchData = $searchResponse->json();
-
-        if (empty($searchData['results'])) {
-            return response()->json(['error' => 'Acteur non trouve.'], 404);
-        }
-
-        $actorId = $searchData['results'][0]['id'];
-
-        $moviesResponse = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
-            'api_key' => '8b2be63b63004f08e7a50266f157e095',
-            'language' => 'fr-FR'
-        ]);
-
-        $movieData = $moviesResponse->json();
-
-        $movies = $movieData['cast'] ?? [];
-
-
-        return response()->json([
-            'acteur' => $actorName['name'],
-            'nombre_de_films' => count($movies),
-            'films' => $movies
-        ]);
-    }
 
 }

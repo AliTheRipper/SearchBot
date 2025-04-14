@@ -168,6 +168,7 @@ class Builder implements BuilderContract
      * Create a new Eloquent query builder instance.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
+     * @return void
      */
     public function __construct(QueryBuilder $query)
     {
@@ -1819,19 +1820,16 @@ class Builder implements BuilderContract
      *
      * @param  \Illuminate\Contracts\Database\Query\Expression|array|string  $attributes
      * @param  mixed  $value
-     * @param  bool  $asConditions
      * @return $this
      */
-    public function withAttributes(Expression|array|string $attributes, $value = null, $asConditions = true)
+    public function withAttributes(Expression|array|string $attributes, $value = null)
     {
         if (! is_array($attributes)) {
             $attributes = [$attributes => $value];
         }
 
-        if ($asConditions) {
-            foreach ($attributes as $column => $value) {
-                $this->where($this->qualifyColumn($column), $value);
-            }
+        foreach ($attributes as $column => $value) {
+            $this->where($this->qualifyColumn($column), $value);
         }
 
         $this->pendingAttributes = array_merge($this->pendingAttributes, $attributes);

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "cinebot-ixf9",
+  "private_key_id": "9db7df946082a812ae169b5794013e35e89273f5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDupHENW0iqVhRy\nY9Eza0NlhS17fB3n377k1GmIU7kqeWA+K/eJDvU9tTGgihvtBjnrXzc3Cvq7lT11\nSuNzh25FV0kdfF+sx8JvOnggr/wxFh/jJiizkx4d974K0JlqSPch0E11rtzeTxmw\nmJbOapOuTb6IWSSDyx+yILSNu2f4ERknboE3y62BoQFLyon6CjR5rMyEzwdLyeL5\nwNe369gKKCImQi8doRDUIxxLAE+/LyIxW5umehkuvYf+p6xNQn3s8ndo3rK/APDe\nHndpvTSihf/shHNPZVG/TN2W9ej/NUPmDPwNShjqHnFMnl9JPlBpniPyogS3Q8FP\nfy84ch6lAgMBAAECggEACaEoEK5oybrMe2sss2L2JsAPfEafXE5qgQhTM9WRCLY6\nHHggtm6clb9cf8pi4xcXujgu3bE7OduFTdjWQcCqwfCKOj7dC3dKELvuwf7n8cEf\nS0asaMacdgAbsosFTcUg98PUhFWogu31LuuRVkX1rJhlglH6h7joEAOC1Z9EzD0s\nbutK6TSK54Tb3rm+YrPkd+oYnZAnGB1jpRUV0f2KGr7v6dpDG2cyqoCYGzPownZk\nEVLUeaVUrmvo/FXLEF30l+huAmEzvpHN8nXLtqSIFldaGLsdOmYXfX5cTTUVlAZ5\nsoftJKy53mSprFloWgXCz9dDzamRB48KiOSzyaOAsQKBgQD9osP1isW4urpkPaat\nzsnbRF4Me0MKXXQPADO1ZdHoYp5x9lEy4uIICWHxVnC9ntAELG5ai14CEPgncQmL\nEDPsEZbwAbaz7jit3ESa4n++8cuSbD2nssOxkHamTYFqjKEyoodyl/dro9hd71Gp\nMF34SExhBwx5kWFjD82w8Q5ZqQKBgQDw3eXzpPHPZ4XRzjzr9Au380fTYgAXCtiJ\noa3ERIOKd0bURHJqw7IB5kUy6beaammeHpcFVNL4mTApZjDxpLucqe++smbC3f3L\nCmUMvjOQOiX72Ceg0qpyGH1FtEpCawW+NGh6imQALRn5hDUST3aZ5ioOubGlkEQI\n+F+tAKVSnQKBgGtMiVP+EilVLXcssa/D1JdjM9pZ5wGiiW+zKSzrV0LVPax+hNlf\nLDo0JfAgHm/JmLy7QzAg13NOVHzzEBN5lk2fH1iHkRBLjkTW81sGyP4xcmqOSgMA\n2FLtB5TRIxe9SJCQO3baHTy3QthyXvyRTp+zjkRZ5Agl3ao3zE+3mteJAoGBAMKX\nYnlOHpUi23e+mHU/emAoSTS7DbuP5ZR7a/kOKP8qkaxXh+A9LYhfUjRpoQ09Pwqh\nR/zkpHR2vfQUPSJbpb5RhACZ/G8eDTWFtlFvMBUrBRjLbmh9CXqX0k0H9J5n/AHI\nMUgemd+SkFOGvaGHVRfMXNn8p0pMnMpqblFEHkv5AoGBAKsa4gcWgJXbFNmHoHuc\njEMVdFk9rg9+p9nP7lnHTdD0JfyiSdjoE6qDtrH30hKd0jP7abvy7nB9XQUxfulw\n3oIKhN2ywk+TQsTa0Nk/T6v69TEbfv/+8OtVJGqlmfC549s15LQHSu3JMqr3gn7f\nkQNChfNacdLxqHx7P+ZvA+bq\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-agent@cinebot-ixf9.iam.gserviceaccount.com",
+  "client_id": "106988038939851095196",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-agent%40cinebot-ixf9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

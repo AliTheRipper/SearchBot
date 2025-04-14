@@ -34,10 +34,5 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-    
-    'dialogflow' => [
-    'key_file' => env('GOOGLE_APPLICATION_CREDENTIALS'),
-    'project_id' => env('DIALOGFLOW_PROJECT_ID'),
-    ],
 
 ];

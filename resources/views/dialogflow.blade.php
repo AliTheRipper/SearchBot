@@ -26,8 +26,19 @@
                 method: 'POST',
                 data: { message: message, _token: '{{ csrf_token() }}' },
                 success: function(response) {
-                    $('#response').text(response.reply);
-                },
+    $('#response').html('<strong>Requête JSON :</strong> ' + response.reply);
+
+    if (response.movies && response.movies.length > 0) {
+        let html = '<ul>';
+        response.movies.forEach(function(movie) {
+            html += '<li><strong>' + movie.title + '</strong> (' + movie.release_date + ') - Note : ' + movie.vote_average + '</li>';
+        });
+        html += '</ul>';
+        $('#response').append('<br><strong>Films trouvés :</strong><br>' + html);
+    } else {
+        $('#response').append('<br><em>Aucun film trouvé.</em>');
+    }
+},
                 error: function(xhr) {
                     alert('Erreur : ' + xhr.responseText);
                 }
