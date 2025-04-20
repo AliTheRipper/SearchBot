@@ -36,6 +36,7 @@ Déplace-toi dans le dossier du projet Laravel :
 composer install
 php artisan serve
 ```
+Remplacez le chemin du variable $credentialsPath dans le fichier DialogFlowController.php dans app/Http/Controllers par vle chemin absolu du fichier dialogflow-key.json
 
 ---
 
