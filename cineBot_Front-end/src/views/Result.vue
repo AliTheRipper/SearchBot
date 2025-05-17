@@ -3,7 +3,7 @@
         <img :src="poster" :alt="movieTitle">
         <div class="info">
             <h1>{{ movieTitle }}</h1>
-            <h2>{{ genres }} • {{ year }}</h2>
+            <h2>{{ genres.join(', ') }} • {{ year }}</h2>
             <p>{{ summary }}</p>
             <br>
             <p class="dim-text">Cliquez pour afficher la fiche technique</p>

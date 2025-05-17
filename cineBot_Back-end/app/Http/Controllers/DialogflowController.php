@@ -22,7 +22,7 @@ class DialogflowController extends Controller
         $queryText = $request->input('message');
         $projectId = "cinebot-ixf9";
         $sessionId = uniqid();
-        $credentialsPath = "/home/ibrahim/Documents/Gestion_des_Projets/SearchBot/cineBot_Back-end/dialogflow-key.json";// Chemin absolu vers le fichier de clé de compte de service
+        $credentialsPath = "/home/ibrahim/Documents/Projets/Gestion_des_Projets/SearchBot/Cinebot/SearchBot/cineBot_Back-end/dialogflow-key.json";// Chemin absolu vers le fichier de clé de compte de service
         //Remplacez la partie /home/ibrahim/Documents/Gestion_des_Projets/SearchBot/cineBot_Back-end/ par le chemin absolu vers votre fichier de clé de compte de service
         if (!file_exists($credentialsPath)) {
             return response()->json(['reply' => 'Fichier credentials non trouvé.']);
